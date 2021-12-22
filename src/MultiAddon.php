@@ -65,7 +65,7 @@ class MultiAddon
             return $next($request);
         }
 
-        return $this->app->middleware->pipeline('app')
+        return $this->app->middleware->pipeline('addons')
             ->send($request)
             ->then(function ($request) use ($next) {
                 return $next($request);
