@@ -1,0 +1,28 @@
+{
+    "name": "puins/think-multi-addon",
+    "description": "thinkphp6 multi addon support",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "puins",
+            "email": "hnjumeng@163.com"
+        }
+    ],
+    "require": {
+    	"php": ">=7.1.0",
+        "topthink/framework": "^6.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "think\\addons\\": "src"
+        }
+    },
+    "extra": {
+        "think":{
+            "services":[
+                "think\\addons\\Service"
+            ]
+        }
+    },    
+    "minimum-stability": "dev"
+}
