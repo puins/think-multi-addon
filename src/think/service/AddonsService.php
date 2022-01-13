@@ -70,19 +70,28 @@ class AddonsService extends Service
         $subDomain = $this->app->request->subDomain(); //当前子域名
         $domain = $this->app->request->host(true); //当前主域名
 
+        $app_bind = $this->app->config->get('app.domain_bind', []); //插件域名绑定
+
+        if (!empty($app_bind)) {
+            if (isset($app_bind[$domain]) || isset($app_bind[$subDomain]) || isset($app_bind['*'])) {
+                return false;
+            }
+        }
+
         $addons_bind = $this->app->config->get('addons.domain_bind', []); //插件域名绑定
 
         if (!empty($addons_bind)) {
             if (isset($addons_bind[$domain])) {
-                $this->app->http->name($addons_bind[$domain]);
-                return true;
+                $addonName = $addons_bind[$domain];
             } elseif (isset($addons_bind[$subDomain])) {
-                $this->app->http->name($addons_bind[$subDomain]);
+                $addonName = $addons_bind[$subDomain];
                 return true;
             } elseif (isset($addons_bind['*'])) {
-                $this->app->http->name($addons_bind['*']);
-                return true;
+                $addonName = $addons_bind['*'];
             }
+
+            $this->app->http->name($addonName);
+            return true;
         }
 
         $path = $this->app->request->url();

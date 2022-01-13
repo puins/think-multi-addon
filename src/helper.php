@@ -11,12 +11,12 @@
 declare (strict_types = 1);
 
 //------------------------
-// ThinkPHP 助手函数
+// 插件助手函数
 //-------------------------
 
 use think\App;
-use think\Route;
-use think\route\AddonUrl as UrlBuild;
+use think\facade\Route;
+use think\route\Url as UrlBuild;
 
 if (!function_exists('addon_url')) {
     /**
@@ -29,8 +29,7 @@ if (!function_exists('addon_url')) {
      */
     function addon_url(string $url = '', array $vars = [], $suffix = true, $domain = false): UrlBuild
     {
-        // return Route::buildUrl($url, $vars)->suffix($suffix)->domain($domain);
-        return app()->make(UrlBuild::class, [(new Route(app())), app(), $url, $vars], true)->suffix($suffix)->domain($domain);
+        return app()->make(UrlBuild::class, [app('route'), app(), $url, $vars], true)->suffix($suffix)->domain($domain);
     }
 }
 
@@ -40,7 +39,7 @@ if (!function_exists('addons_path')) {
      *
      * @return string
      */
-    function root_path()
+    function addons_path()
     {
         return app()->getRootPath() . 'addons' . DIRECTORY_SEPARATOR;
     }

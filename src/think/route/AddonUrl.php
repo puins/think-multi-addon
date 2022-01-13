@@ -103,10 +103,11 @@ class AddonUrl extends UrlBuild
                 list($url, $domain) = explode('@', $url, 2);
             }
         }
-
+        halt($url);
         if ($url) {
             $checkName = isset($name) ? $name : $url . (isset($info['query']) ? '?' . $info['query'] : '');
             $checkDomain = $domain && is_string($domain) ? $domain : null;
+            halt($checkName, $checkDomain);
 
             $rule = $this->route->getName($checkName, $checkDomain);
 
