@@ -43,7 +43,6 @@ class AddonsService extends Service
 
     public function boot()
     {
-        halt($this->addonsPath);
         // 如果插件目录不存在则创建
         if (!is_dir($this->addonsPath)) {
             @mkdir($this->addonsPath, 0755, true);
