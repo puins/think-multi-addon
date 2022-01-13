@@ -16,7 +16,7 @@ declare (strict_types = 1);
 
 use think\App;
 use think\facade\Route;
-use think\route\Url as UrlBuild;
+use think\route\AddonUrl as UrlBuild;
 
 if (!function_exists('addon_url')) {
     /**

@@ -67,6 +67,10 @@ class AddonsService extends Service
      */
     private function check()
     {
+        if ($this->app->runningInConsole()) {
+            return false;
+        }
+
         $subDomain = $this->app->request->subDomain(); //当前子域名
         $domain = $this->app->request->host(true); //当前主域名
 
@@ -81,6 +85,7 @@ class AddonsService extends Service
         $addons_bind = $this->app->config->get('addons.domain_bind', []); //插件域名绑定
 
         if (!empty($addons_bind)) {
+            $addonName = null;
             if (isset($addons_bind[$domain])) {
                 $addonName = $addons_bind[$domain];
             } elseif (isset($addons_bind[$subDomain])) {
