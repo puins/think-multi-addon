@@ -27,16 +27,9 @@ class Addons
     /** @var App */
     protected $app;
 
-    /**
-     * 插件名称
-     * @var string
-     */
-    protected $addonName;
-
     public function __construct(App $app)
     {
         $this->app = $app;
-        $this->addonName = $this->app->http->getName();
     }
 
     /**
@@ -88,23 +81,16 @@ class Addons
 
             if (isset($bind[$domain])) {
                 $addonName = $bind[$domain];
-                if (!$this->getInfo($addonName)['state']) {
-                    throw new HttpException(404, 'addon not exists:' . $addonName);
-                }
-                $this->app->http->setBind();
             } elseif (isset($bind[$subDomain])) {
                 $addonName = $bind[$subDomain];
-                if (!$this->getInfo($addonName)['state']) {
-                    throw new HttpException(404, 'addon not exists:' . $addonName);
-                }
-                $this->app->http->setBind();
             } elseif (isset($bind['*'])) {
                 $addonName = $bind['*'];
-                if (!$this->getInfo($addonName)['state']) {
-                    throw new HttpException(404, 'addon not exists:' . $addonName);
-                }
-                $this->app->http->setBind();
             }
+
+            if (!$this->getInfo($addonName)['state']) {
+                throw new HttpException(404, 'addon is disabled:' . $addonName);
+            }
+            $this->app->http->setBind();
         }
 
         if (!$this->app->http->isBind()) {
@@ -116,13 +102,12 @@ class Addons
                 $name = strstr($name, '.', true);
             }
 
-            $addonName = $name;
-
-            if (!$this->getInfo($addonName)['state']) {
-                throw new HttpException(404, 'addon not exists:' . $addonName);
-            }
-
             if ($name) {
+                $addonName = $name;
+
+                if (!$this->getInfo($addonName)['state']) {
+                    throw new HttpException(404, 'addon is disabled:' . $addonName);
+                }
                 $this->app->request->setRoot('/' . $name);
                 $this->app->request->setPathinfo(strpos($path, '/') ? ltrim(strstr($path, '/'), '/') : '');
             }
@@ -138,7 +123,6 @@ class Addons
      */
     protected function setApp(string $addonName): void
     {
-        $this->addonName = $addonName;
         $this->app->http->name($addonName);
 
         $addonPath = $this->getAddonsPath() . $addonName . DIRECTORY_SEPARATOR;
